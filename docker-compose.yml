@@ -1,0 +1,40 @@
+# elasticsearch
+elasticsearch:
+  image: khiraiwa/docker-elasticsearch:1.0.0
+  volumes:
+    - /data_elasticsearch:/data_elasticsearch
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+
+# kibana
+kibana:
+  image: khiraiwa/docker-kibana:1.0.0
+  volumes:
+    - /data_kibana:/data_kibana
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch:docker-elasticsearch
+
+# logstash
+logstash:
+  image: khiraiwa/docker-logstash:1.0.0
+  volumes:
+    - /data_logstash:/data_logstash
+  links:
+    - elasticsearch:docker-elasticsearch
+  environment:
+    - AWS_ACCESS_KEY_ID=dummy
+    - AWS_SECRET_ACCESS_KEY=dummy
+
+# tdagent
+tdagent:
+  image: khiraiwa/docker-tdagent:1.0.0
+  volumes:
+    - /data_tdagent:/etc/td-agent
+  links:
+    - elasticsearch:docker-elasticsearch
+  environment:
+    - AWS_ACCESS_KEY_ID=dummy
+    - AWS_SECRET_ACCESS_KEY=dummy
